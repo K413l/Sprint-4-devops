@@ -1,4 +1,19 @@
+# 1) Criar a imagem do projeto com um Dockerfile
+# Certifique-se de que o arquivo Dockerfile está configurado corretamente no diretório do seu projeto
 
+# 2) Realizar o Build da imagem localmente
+# Constrói a imagem Docker localmente usando o Dockerfile no diretório atual
+docker build -t aicreditanalyzer:latest .
+
+# 3) Testar localmente, e estando tudo OK:
+# Executar a imagem localmente para testes
+docker run -p 8080:8080 aicreditanalyzer:latest
+
+# Acesse a aplicação em http://localhost:8080 para garantir que tudo está funcionando conforme esperado.
+
+# Se tudo estiver OK, prossiga para o próximo passo:
+
+# 4) Registrar essa imagem no ACR em nuvem incluindo no nome da imagem o RM do representante do grupo como prefixo
 # Cria um grupo de recursos no Azure chamado "myResourceGroup" na localização "eastus"
 az group create --name myResourceGroup --location eastus
 
@@ -7,9 +22,6 @@ az acr create --resource-group myResourceGroup --name rm551832acr --sku Basic
 
 # Faz login no Azure Container Registry para permitir o envio de imagens Docker
 az acr login --name rm551832acr
-
-# Constrói a imagem Docker localmente usando o Dockerfile no diretório atual
-docker build -t aicreditanalyzer:latest .
 
 # Adiciona uma tag à imagem Docker para indicar que será enviada ao ACR
 docker tag aicreditanalyzer:latest rm551832acr.azurecr.io/rm551832-aicreditanalyzer:v1
@@ -45,5 +57,3 @@ az container show --resource-group myResourceGroup --name rm551832aci --query ip
 
 # Insira no browser da seguinte maneira
 http://rm551832aci.eastus.azurecontainer.io:8080
-
-# Pronto, agora está perfeito!
