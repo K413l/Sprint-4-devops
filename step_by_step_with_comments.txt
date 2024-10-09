@@ -1,0 +1,49 @@
+
+# Cria um grupo de recursos no Azure chamado "myResourceGroup" na localização "eastus"
+az group create --name myResourceGroup --location eastus
+
+# Cria um Azure Container Registry (ACR) chamado "rm551832acr" com o SKU (plano) Basic
+az acr create --resource-group myResourceGroup --name rm551832acr --sku Basic
+
+# Faz login no Azure Container Registry para permitir o envio de imagens Docker
+az acr login --name rm551832acr
+
+# Constrói a imagem Docker localmente usando o Dockerfile no diretório atual
+docker build -t aicreditanalyzer:latest .
+
+# Adiciona uma tag à imagem Docker para indicar que será enviada ao ACR
+docker tag aicreditanalyzer:latest rm551832acr.azurecr.io/rm551832-aicreditanalyzer:v1
+
+# Envia a imagem Docker para o ACR com a tag especificada
+docker push rm551832acr.azurecr.io/rm551832-aicreditanalyzer:v1
+
+# Habilita o modo de administrador no ACR para permitir o uso de credenciais de administrador
+az acr update -n rm551832acr --admin-enabled true
+
+# Recupera o nome de usuário do ACR
+az acr credential show --name rm551832acr --query "username" --output tsv
+
+# Define a variável de ambiente "ACR_USERNAME" com o valor do nome de usuário do ACR
+set ACR_USERNAME=coloque_o_username_aqui
+
+# Recupera a senha do ACR
+az acr credential show --name rm551832acr --query "passwords[0].value" --output tsv
+
+# Define a variável de ambiente "ACR_PASSWORD" com o valor da senha do ACR
+set ACR_PASSWORD=coloque_a_senha_aqui
+
+# Cria uma instância de container no Azure usando a imagem armazenada no ACR, com 1 CPU, 1GB de memória e expõe a porta 8080
+az container create --resource-group myResourceGroup --name rm551832aci --image rm551832acr.azurecr.io/rm551832-aicreditanalyzer:v1 --cpu 1 --memory 1 --registry-login-server rm551832acr.azurecr.io --registry-username %ACR_USERNAME% --registry-password %ACR_PASSWORD% --ports 8080 --dns-name-label rm551832aci
+
+# Mostra o status e detalhes da instância do container em formato de tabela
+az container show --resource-group myResourceGroup --name rm551832aci --output table
+
+# Retorna o FQDN (nome de domínio completo) da instância do container, que é o link de acesso à aplicação
+az container show --resource-group myResourceGroup --name rm551832aci --query ipAddress.fqdn --output tsv
+
+# O link retornado será algo como: rm551832aci.eastus.azurecontainer.io
+
+# Insira no browser da seguinte maneira
+http://rm551832aci.eastus.azurecontainer.io:8080
+
+# Pronto, agora está perfeito!
