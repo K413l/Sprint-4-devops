@@ -18,7 +18,7 @@ Before running this project, ensure you have the following installed:
 
    ```bash
    git clone <repository-url>
-   cd aicreditanalyzer
+   cd checkpoint-2-devops
    ```
 
 2. **Build the Application**
