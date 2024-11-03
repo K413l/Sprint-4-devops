@@ -21,4 +21,4 @@ steps:
     Dockerfile: '**/Dockerfile'
     tags: |
       $(Build.BuildId)
-      lastest
+      latest
