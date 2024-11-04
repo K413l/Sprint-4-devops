@@ -83,7 +83,7 @@ Before running this project, ensure you have the following installed:
 
    ```bash
    git clone <repository-url>
-   cd checkpoint-2-devops
+   cd Sprint-4-devops
    ```
 
 2. **Build the Application**
