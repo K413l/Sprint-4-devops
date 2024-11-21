@@ -1,6 +1,6 @@
 # Step by Step Guide to Create an Organization in Azure DevOps and Set Up a CI/CD Pipeline
 
-## Prerequisites
+## Prerequisite
 - An Azure DevOps account.
 - A GitHub repository and Docker setup.
 
